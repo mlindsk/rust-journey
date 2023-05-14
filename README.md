@@ -5,8 +5,7 @@ Lindskou’s Rust Journey
 - <a href="#concepts-and-reserved-language-keywords"
   id="toc-concepts-and-reserved-language-keywords">Concepts and Reserved
   Language Keywords</a>
-  - <a href="#traits" id="toc-traits">Traits</a>
-  - <a href="#impl" id="toc-impl"><code>impl</code></a>
+  - <a href="#todo" id="toc-todo">TODO:</a>
 
 Let’s see how long the journey will be; depends on the kids bedtime and
 the relevance for Rust at my work.
@@ -23,16 +22,9 @@ This section serves as my own explanation/interpretation of concepts or
 just some explanation that I found on the web which I liked. Concepts
 are in bold and reserved language keywords are in `code`.
 
-### Traits
+### TODO:
 
-https://doc.rust-lang.org/rust-by-example/trait.html?highlight=traits#traits
-
-### `impl`
-
-https://doc.rust-lang.org/rust-by-example/hello/print/print_display.html
-
-``` rust
-fn is_odd(n: u32) -> bool {
-    n % 2 == 1
-}
-```
+- Traits
+- `impl`
+- Borrowing/Ownership
+- …

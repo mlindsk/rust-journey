@@ -9,12 +9,12 @@ edition = "2021"
 
 [[bin]]
 name = "primitives"
-path = "src/primitives/main.rs"
+path = "src/01-primitives/main.rs"
 
 [[bin]]
 name = "containers"
-path = "src/containers/main.rs"
+path = "src/0?-containers/main.rs"
 
 [[bin]]
 name = "controlflow"
-path = "src/controlflow/main.rs"
+path = "src/0?-controlflow/main.rs"

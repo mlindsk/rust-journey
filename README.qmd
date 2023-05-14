@@ -16,18 +16,10 @@ A lot of the material is from the [documentaion](https://doc.rust-lang.org/rust-
 
 This section serves as my own explanation/interpretation of concepts or just some explanation that I found on the web which I liked. Concepts are in bold and reserved language keywords are in `code`.
 
-### Traits
 
-https://doc.rust-lang.org/rust-by-example/trait.html?highlight=traits#traits
+### TODO:
 
-### `impl`
-
-https://doc.rust-lang.org/rust-by-example/hello/print/print_display.html
-
-
-
-```rust
-fn is_odd(n: u32) -> bool {
-    n % 2 == 1
-}
-```
+ - Traits
+ - `impl`
+ - Borrowing/Ownership
+ - ...

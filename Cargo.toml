@@ -12,6 +12,10 @@ name = "primitives"
 path = "src/01-primitives/main.rs"
 
 [[bin]]
+name = "structs"
+path = "src/02-structs/main.rs"
+
+[[bin]]
 name = "containers"
 path = "src/0?-containers/main.rs"
 

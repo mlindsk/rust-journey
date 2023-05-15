@@ -1,6 +1,9 @@
 primitives:
 	cargo run --bin primitives
 
+structs:
+	cargo run --bin structs
+
 containers:
 	cargo run --bin containers
 

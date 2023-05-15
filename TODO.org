@@ -1,0 +1,6 @@
+* Concepts
+
+ - Return
+ - Result: Returning and propagate errors. It is an enum with Ok(T) and Err(E)
+ - Borrowing
+ - Options

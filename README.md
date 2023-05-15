@@ -1,30 +1,55 @@
-Lindskou’s Rust Journey
-================
+# Lindskou’s Rust Journey
 
-- <a href="#primer" id="toc-primer">Primer</a>
-- <a href="#concepts-and-reserved-language-keywords"
-  id="toc-concepts-and-reserved-language-keywords">Concepts and Reserved
-  Language Keywords</a>
-  - <a href="#todo" id="toc-todo">TODO:</a>
+- [Primer](#primer)
+- [Compilation](#compilation)
+- [Cargo](#cargo)
+- [Rustup](#rustup)
+- [Emacs Setup](#emacs-setup)
 
 Let’s see how long the journey will be; depends on the kids bedtime and
 the relevance for Rust at my work.
 
 # Primer
 
-A lot of the material is from the
-[documentaion](https://doc.rust-lang.org/rust-by-example/) which I have
-either just run as is or changed to understand.
+A lot of the material is from the resources
 
-# Concepts and Reserved Language Keywords
+- https://doc.rust-lang.org/book/
+- https://doc.rust-lang.org/rust-by-example/
 
-This section serves as my own explanation/interpretation of concepts or
-just some explanation that I found on the web which I liked. Concepts
-are in bold and reserved language keywords are in `code`.
+which I have either just run as is or changed to understand.
 
-### TODO:
+# Compilation
 
-- Traits
-- `impl`
-- Borrowing/Ownership
-- …
+In `Cargo.toml` many different binaries are define, e.g.
+
+``` toml
+[[bin]]
+name = "primitives"
+path = "src/01-primitives/main.rs"
+```
+
+This tells rust, that there is a main file in `src/01-primitives/` that
+should be compiled. In addition it has been given the name `primitives`
+and one can type `make primitives` to automatically compile and run
+this. This is just sugar for the command `cargo run --bin primitives`.
+
+# Cargo
+
+``` bash
+cargo new # Instantiate new project and make a git repo
+cargo build # Build the project
+cargo run # Build and run the project
+cargo check # Check if the project compiles (not producing executable)
+```
+
+# Rustup
+
+A toolchain for Rust:
+https://doc.rust-lang.org/book/ch01-01-installation.html
+
+# Emacs Setup
+
+- Install Rust:
+  `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+- Emacs Rust mode: https://github.com/rust-lang/rust-mode
+- Rust analyzer (LSP): `rustup component add rust-analyzer`

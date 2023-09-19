@@ -10,10 +10,11 @@ Let's see how long the journey will be; depends on the kids bedtime and the rele
 
 # Primer
 
-A lot of the material is from the resources 
+A lot of the material is from these resources 
 
  - https://doc.rust-lang.org/book/
  - https://doc.rust-lang.org/rust-by-example/
+ - https://github.com/jinlow/forust
 
 which I have either just run as is or changed to understand. 
 

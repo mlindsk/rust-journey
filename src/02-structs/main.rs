@@ -15,10 +15,5 @@ fn main() {
     // let name = String::from("Mads"); // Initiate with content
     let name = "Mads".to_string();
     let age = 35;
-    let mads = Person {name, age };
-
-
-    
-    
-        
+    let _mads = Person {name, age };
 }

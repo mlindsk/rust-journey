@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rust Cheat Sheet</title>
+<style>
+  :root {
+    --bg:         #1a1b26;
+    --bg-card:    #24283b;
+    --bg-code:    #1e2030;
+    --border:     #3b4261;
+    --text:       #c0caf5;
+    --text-dim:   #8690b5;
+    --heading:    #7aa2f7;
+    --accent:     #bb9af7;
+    --accent2:    #7dcfff;
+    --green:      #9ece6a;
+    --orange:     #e0af68;
+    --red:        #f7768e;
+    --cyan:       #73daca;
+    --yellow:     #e0af68;
+    --string:     #9ece6a;
+    --comment:    #565f89;
+    --keyword:    #bb9af7;
+    --type:       #2ac3de;
+    --func:       #7aa2f7;
+    --macro:      #7dcfff;
+    --number:     #ff9e64;
+    --punct:      #89ddff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scrollbar-color: var(--border) var(--bg);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 2rem 1rem;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── Title ─────────────────────────────────────────────── */
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--heading);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  h1::before {
+    content: '🦀';
+    font-size: 1.8rem;
+  }
+
+  /* ── Core-ideas banner ─────────────────────────────────── */
+  .core-ideas {
+    background: linear-gradient(135deg, #1e2440 0%, #24283b 100%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 1.4rem 1.6rem;
+    margin: 1.6rem 0 2.4rem;
+  }
+  .core-ideas h2 {
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+  .core-ideas dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.35rem 1rem;
+  }
+  .core-ideas dt {
+    font-weight: 700;
+    color: var(--accent2);
+    white-space: nowrap;
+  }
+  .core-ideas dd {
+    color: var(--text-dim);
+  }
+  .core-ideas code {
+    background: var(--bg-code);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-size: 0.88em;
+    color: var(--cyan);
+  }
+
+  /* ── Section headings ──────────────────────────────────── */
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--heading);
+    margin: 2.4rem 0 0.6rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--border);
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent2);
+    margin: 1.2rem 0 0.4rem;
+  }
+
+  /* ── Cards (each section) ──────────────────────────────── */
+  section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+  section h2 {
+    margin-top: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0.6rem;
+  }
+
+  /* ── Prose lists ───────────────────────────────────────── */
+  ul, ol {
+    padding-left: 1.3rem;
+    margin: 0.4rem 0 0.8rem;
+  }
+  li {
+    margin-bottom: 0.2rem;
+    color: var(--text-dim);
+  }
+  li strong { color: var(--text); }
+
+  p {
+    margin: 0.5rem 0;
+    color: var(--text-dim);
+  }
+
+  /* ── Code blocks ───────────────────────────────────────── */
+  pre {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+    margin: 0.6rem 0 0.8rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+  pre code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', 'Consolas', monospace;
+    background: none;
+    padding: 0;
+    color: var(--text);
+  }
+
+  /* Inline code */
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', 'Consolas', monospace;
+    background: var(--bg-code);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-size: 0.88em;
+    color: var(--cyan);
+  }
+
+  /* ── Syntax highlighting spans ─────────────────────────── */
+  .kw  { color: var(--keyword); }
+  .ty  { color: var(--type); }
+  .fn  { color: var(--func); }
+  .mc  { color: var(--macro); }
+  .st  { color: var(--string); }
+  .cm  { color: var(--comment); font-style: italic; }
+  .nu  { color: var(--number); }
+  .pc  { color: var(--punct); }
+  .lf  { color: var(--text); }
+
+  /* ── Table of contents ─────────────────────────────────── */
+  nav.toc {
+    margin: 0 0 2rem;
+    padding: 1rem 1.4rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  nav.toc h2 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin: 0 0 0.6rem;
+    border: none;
+    padding: 0;
+  }
+  nav.toc ol {
+    padding-left: 1.2rem;
+    columns: 2;
+    column-gap: 2rem;
+  }
+  nav.toc li {
+    break-inside: avoid;
+    margin-bottom: 0.25rem;
+  }
+  nav.toc a {
+    color: var(--accent2);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  nav.toc a:hover { color: var(--accent); }
+
+  /* ── Utility ───────────────────────────────────────────── */
+  .arrow { color: var(--orange); }
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.6rem 0;
+  }
+
+  /* ── Footer ────────────────────────────────────────────── */
+  footer {
+    text-align: center;
+    color: var(--comment);
+    font-size: 0.8rem;
+    margin-top: 3rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Responsive ────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    body { padding: 1rem 0.6rem; font-size: 14px; }
+    h1 { font-size: 1.6rem; }
+    section { padding: 1rem; }
+    pre { padding: 0.8rem; font-size: 0.82rem; }
+    nav.toc ol { columns: 1; }
+    .core-ideas dl { grid-template-columns: 1fr; }
+    .core-ideas dt { margin-top: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Rust Cheat Sheet</h1>
+
+<!-- ═══ Core Ideas ═══════════════════════════════════════ -->
+<div class="core-ideas">
+  <h2>Core Ideas</h2>
+  <dl>
+    <dt>Ownership</dt>
+    <dd>Every value has exactly one owner. When the owner goes out of scope, the value is dropped.</dd>
+  </dl>
+<pre><code><span class="pc">{</span>
+    <span class="kw">let</span> <span class="lf">s</span> <span class="pc">=</span> <span class="ty">String</span><span class="pc">::</span><span class="fn">from</span><span class="pc">(</span><span class="st">"hello"</span><span class="pc">);</span>  <span class="cm">// s owns the String</span>
+<span class="pc">}</span>                                   <span class="cm">// s goes out of scope → memory freed</span></code></pre>
+
+  <dl>
+    <dt>Move</dt>
+    <dd>Assigning or passing a value transfers ownership; the original binding is invalidated (unless the type is <code>Copy</code>).</dd>
+  </dl>
+<pre><code><span class="kw">let</span> <span class="lf">a</span> <span class="pc">=</span> <span class="ty">String</span><span class="pc">::</span><span class="fn">from</span><span class="pc">(</span><span class="st">"hello"</span><span class="pc">);</span>
+<span class="kw">let</span> <span class="lf">b</span> <span class="pc">=</span> <span class="lf">a</span><span class="pc">;</span>           <span class="cm">// ownership moves to b</span>
+<span class="cm">// println!("{a}");   // ✗ compile error: a is no longer valid</span>
+<span class="mc">println!</span><span class="pc">(</span><span class="st">"{b}"</span><span class="pc">);</span>      <span class="cm">// ✓ b owns it now</span></code></pre>
+
+  <dl>
+    <dt>Borrowing</dt>
+    <dd>References (<code>&amp;T</code> / <code>&amp;mut T</code>) let you access data without taking ownership. Rule: many shared readers <em>or</em> one exclusive writer, never both.</dd>
+  </dl>
+<pre><code><span class="kw">let mut</span> <span class="lf">s</span> <span class="pc">=</span> <span class="ty">String</span><span class="pc">::</span><span class="fn">from</span><span class="pc">(</span><span class="st">"hello"</span><span class="pc">);</span>
+
+<span class="kw">let</span> <span class="lf">r1</span> <span class="pc">=</span> <span class="pc">&amp;</span><span class="lf">s</span><span class="pc">;</span>         <span class="cm">// ✓ shared borrow</span>
+<span class="kw">let</span> <span class="lf">r2</span> <span class="pc">=</span> <span class="pc">&amp;</span><span class="lf">s</span><span class="pc">;</span>         <span class="cm">// ✓ multiple shared borrows OK</span>
+<span class="mc">println!</span><span class="pc">(</span><span class="st">"{r1} {r2}"</span><span class="pc">);</span>
+
+<span class="kw">let</span> <span class="lf">r3</span> <span class="pc">=</span> <span class="pc">&amp;</span><span class="kw">mut</span> <span class="lf">s</span><span class="pc">;</span>     <span class="cm">// ✓ exclusive borrow (no other refs active)</span>
+<span class="lf">r3</span><span class="pc">.</span><span class="fn">push_str</span><span class="pc">(</span><span class="st">" world"</span><span class="pc">);</span></code></pre>
+
+  <dl>
+    <dt>Lifetimes</dt>
+    <dd>The compiler tracks how long references are valid to guarantee no dangling pointers. Usually inferred; annotate (<code>'a</code>) when the compiler needs help.</dd>
+  </dl>
+<pre><code><span class="cm">// Annotation tells the compiler: the returned ref lives as long as</span>
+<span class="cm">// both inputs — the caller must keep both alive.</span>
+<span class="kw">fn</span> <span class="fn">longer</span><span class="pc">&lt;</span><span class="lf">'a</span><span class="pc">&gt;(</span><span class="lf">a</span><span class="pc">:</span> <span class="pc">&amp;</span><span class="lf">'a</span> <span class="ty">str</span><span class="pc">,</span> <span class="lf">b</span><span class="pc">:</span> <span class="pc">&amp;</span><span class="lf">'a</span> <span class="ty">str</span><span class="pc">)</span> <span class="pc">-&gt;</span> <span class="pc">&amp;</span><span class="lf">'a</span> <span class="ty">str</span> <span class="pc">{</span>
+    <span class="kw">if</span> <span class="lf">a</span><span class="pc">.</span><span class="fn">len</span><span class="pc">()</span> <span class="pc">&gt;=</span> <span class="lf">b</span><span class="pc">.</span><span class="fn">len</span><span class="pc">()</span> <span class="pc">{</span> <span class="lf">a</span> <span class="pc">}</span> <span class="kw">else</span> <span class="pc">{</span> <span class="lf">b</span> <span class="pc">}</span>
+<span class="pc">}</span></code></pre>
+
+  <dl>
+    <dt>Zero-cost abstractions</dt>
+    <dd>Iterators, generics, and traits compile down to the same code you'd write by hand; no runtime overhead.</dd>
+  </dl>
+<pre><code><span class="cm">// This iterator chain compiles to the same loop a C programmer would write</span>
+<span class="kw">let</span> <span class="lf">sum</span><span class="pc">:</span> <span class="ty">i32</span> <span class="pc">=</span> <span class="pc">(</span><span class="nu">1</span><span class="pc">..=</span><span class="nu">100</span><span class="pc">).</span><span class="fn">filter</span><span class="pc">(|</span><span class="lf">n</span><span class="pc">|</span> <span class="lf">n</span> <span class="pc">%</span> <span class="nu">2</span> <span class="pc">==</span> <span class="nu">0</span><span class="pc">).</span><span class="fn">sum</span><span class="pc">();</span></code></pre>
+</div>
+
+<!-- ═══ Table of Contents ════════════════════════════════ -->
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol start="0">
+    <li><a href="#s0">Structs vs Enums</a></li>
+    <li><a href="#s1">Structs &amp; Methods</a></li>
+    <li><a href="#s2">Core Definitions</a></li>
+    <li><a href="#s3">Conversions: Option ↔ Result</a></li>
+    <li><a href="#s4">Transforming Values</a></li>
+    <li><a href="#s5">Unwrapping With Defaults</a></li>
+    <li><a href="#s6">Early Returns With <code>?</code></a></li>
+    <li><a href="#s7">transpose()</a></li>
+    <li><a href="#s8">Pattern Matching</a></li>
+    <li><a href="#s9">Option Helpers</a></li>
+    <li><a href="#s10">Result Helpers</a></li>
+    <li><a href="#s11">Real-World Patterns</a></li>
+    <li><a href="#s12">When to Use Which</a></li>
+    <li><a href="#s13">Avoid Common Mistakes</a></li>
+  </ol>
+</nav>
+
+<!-- ═══ 0. Structs vs Enums ══════════════════════════════ -->
+<section id="s0">
+  <h2>0. Structs vs Enums</h2>
+
+  <p><strong>Use a struct when:</strong></p>
+  <ul>
+    <li>All fields are always present</li>
+    <li>There is only one valid "state"</li>
+    <li>The data represents a cohesive object</li>
+  </ul>
+
+  <p><strong>Use an enum when:</strong></p>
+  <ul>
+    <li>There are multiple valid states</li>
+    <li>Each state has different data</li>
+    <li>You want the compiler to prevent impossible combinations</li>
+    <li>You'll pattern-match on behavior</li>
+  </ul>
+
+  <p>Enums are <strong>sum types</strong>, structs are <strong>product types</strong>:</p>
+  <ul>
+    <li><code>struct { A, B }</code> <span class="arrow">→</span> has A <em>and</em> B</li>
+    <li><code>enum { A, B }</code> <span class="arrow">→</span> has A <em>or</em> B</li>
+  </ul>
+</section>
+
+<!-- ═══ 1. Structs & Methods ═════════════════════════════ -->
+<section id="s1">
+  <h2>1. Structs &amp; Methods</h2>
+
+  <p>Define data with <code>struct</code>, attach behavior with <code>impl</code>:</p>
+
+<pre><code><span class="kw">struct</span> <span class="ty">Tree</span> <span class="pc">{</span>
+    <span class="lf">value</span><span class="pc">:</span> <span class="ty">i32</span><span class="pc">,</span>
+    <span class="lf">left</span><span class="pc">:</span>  <span class="ty">Option</span><span class="pc">&lt;</span><span class="ty">Box</span><span class="pc">&lt;</span><span class="ty">Tree</span><span class="pc">&gt;&gt;,</span>   <span class="cm">// Box for recursive types</span>
+    <span class="lf">right</span><span class="pc">:</span> <span class="ty">Option</span><span class="pc">&lt;</span><span class="ty">Box</span><span class="pc">&lt;</span><span class="ty">Tree</span><span class="pc">&gt;&gt;,</span>
+<span class="pc">}</span>
+
+<span class="kw">impl</span> <span class="ty">Tree</span> <span class="pc">{</span>
+    <span class="cm">// Associated function (no self) — used as a constructor</span>
+    <span class="kw">fn</span> <span class="fn">leaf</span><span class="pc">(</span><span class="lf">value</span><span class="pc">:</span> <span class="ty">i32</span><span class="pc">)</span> <span class="pc">-&gt;</span> <span class="ty">Self</span> <span class="pc">{</span>
+        <span class="ty">Tree</span> <span class="pc">{</span> <span class="lf">value</span><span class="pc">,</span> <span class="lf">left</span><span class="pc">:</span> <span class="ty">None</span><span class="pc">,</span> <span class="lf">right</span><span class="pc">:</span> <span class="ty">None</span> <span class="pc">}</span>
+    <span class="pc">}</span>
+
+    <span class="kw">fn</span> <span class="fn">new</span><span class="pc">(</span><span class="lf">value</span><span class="pc">:</span> <span class="ty">i32</span><span class="pc">,</span> <span class="lf">left</span><span class="pc">:</span> <span class="ty">Tree</span><span class="pc">,</span> <span class="lf">right</span><span class="pc">:</span> <span class="ty">Tree</span><span class="pc">)</span> <span class="pc">-&gt;</span> <span class="ty">Self</span> <span class="pc">{</span>
+        <span class="ty">Tree</span> <span class="pc">{</span> <span class="lf">value</span><span class="pc">,</span> <span class="lf">left</span><span class="pc">:</span> <span class="ty">Some</span><span class="pc">(</span><span class="ty">Box</span><span class="pc">::</span><span class="fn">new</span><span class="pc">(</span><span class="lf">left</span><span class="pc">)),</span> <span class="lf">right</span><span class="pc">:</span> <span class="ty">Some</span><span class="pc">(</span><span class="ty">Box</span><span class="pc">::</span><span class="fn">new</span><span class="pc">(</span><span class="lf">right</span><span class="pc">))</span> <span class="pc">}</span>
+    <span class="pc">}</span>
+
+    <span class="cm">// Method: &amp;self = shared borrow, &amp;mut self = exclusive borrow</span>
+    <span class="kw">fn</span> <span class="fn">count</span><span class="pc">(&amp;</span><span class="kw">self</span><span class="pc">)</span> <span class="pc">-&gt;</span> <span class="ty">usize</span> <span class="pc">{</span>
+        <span class="nu">1</span> <span class="pc">+</span> <span class="kw">self</span><span class="pc">.</span><span class="lf">left</span><span class="pc">.</span><span class="fn">as_ref</span><span class="pc">().</span><span class="fn">map_or</span><span class="pc">(</span><span class="nu">0</span><span class="pc">,</span> <span class="pc">|</span><span class="lf">n</span><span class="pc">|</span> <span class="lf">n</span><span class="pc">.</span><span class="fn">count</span><span class="pc">())</span>
+          <span class="pc">+</span> <span class="kw">self</span><span class="pc">.</span><span class="lf">right</span><span class="pc">.</span><span class="fn">as_ref</span><span class="pc">().</span><span class="fn">map_or</span><span class="pc">(</span><span class="nu">0</span><span class="pc">,</span> <span class="pc">|</span><span class="lf">n</span><span class="pc">|</span> <span class="lf">n</span><span class="pc">.</span><span class="fn">count</span><span class="pc">())</span>
+    <span class="pc">}</span>
+
+    <span class="kw">fn</span> <span class="fn">contains</span><span class="pc">(&amp;</span><span class="kw">self</span><span class="pc">,</span> <span class="lf">target</span><span class="pc">:</span> <span class="ty">i32</span><span class="pc">)</span> <span class="pc">-&gt;</span> <span class="ty">bool</span> <span class="pc">{</span>
+        <span class="kw">self</span><span class="pc">.</span><span class="lf">value</span> <span class="pc">==</span> <span class="lf">target</span>
+            <span class="pc">||</span> <span class="kw">self</span><span class="pc">.</span><span class="lf">left</span><span class="pc">.</span><span class="fn">as_ref</span><span class="pc">().</span><span class="fn">is_some_and</span><span class="pc">(|</span><span class="lf">n</span><span class="pc">|</span> <span class="lf">n</span><span class="pc">.</span><span class="fn">contains</span><span class="pc">(</span><span class="lf">target</span><span class="pc">))</span>
+            <span class="pc">||</span> <span class="kw">self</span><span class="pc">.</span><span class="lf">right</span><span class="pc">.</span><span class="fn">as_ref</span><span class="pc">().</span><span class="fn">is_some_and</span><span class="pc">(|</span><span class="lf">n</span><span class="pc">|</span> <span class="lf">n</span><span class="pc">.</span><span class="fn">contains</span><span class="pc">(</span><span class="lf">target</span><span class="pc">))</span>
+    <span class="pc">}</span>
+<span class="pc">}</span>
+
+<span class="cm">// Usage</span>
+<span class="kw">let</span> <span class="lf">tree</span> <span class="pc">=</span> <span class="ty">Tree</span><span class="pc">::</span><span class="fn">new</span><span class="pc">(</span>
+    <span class="nu">1</span><span class="pc">,</span>
+    <span class="ty">Tree</span><span class="pc">::</span><span class="fn">leaf</span><span class="pc">(</span><span class="nu">2</span><span class="pc">),</span>
+    <span class="ty">Tree</span><span class="pc">::</span><span class="fn">new</span><span class="pc">(</span><span class="nu">3</span><span class="pc">,</span> <span class="ty">Tree</span><span class="pc">::</span><span class="fn">leaf</span><span class="pc">(</span><span class="nu">4</span><span class="pc">),</span> <span class="ty">Tree</span><span class="pc">::</span><span class="fn">leaf</span><span class="pc">(</span><span class="nu">5</span><span class="pc">)),</span>
+<span class="pc">);</span>
+<span class="lf">tree</span><span class="pc">.</span><span class="fn">count</span><span class="pc">();</span>       <span class="cm">// 5</span>
+<span class="lf">tree</span><span class="pc">.</span><span class="fn">contains</span><span class="pc">(</span><span class="nu">4</span><span class="pc">);</span>   <span class="cm">// true</span></code></pre>
+
+  <p><strong>Key points:</strong></p>
+  <ul>
+    <li><code>Self</code> is an alias for the type being implemented</li>
+    <li><code>&amp;self</code> borrows immutably, <code>&amp;mut self</code> borrows mutably, <code>self</code> takes ownership</li>
+    <li>Associated functions (no <code>self</code>) are called with <code>Type::func()</code></li>
+    <li>Methods (have <code>self</code>) are called with <code>value.method()</code></li>
+    <li>Use <code>Box&lt;T&gt;</code> for heap allocation / recursive types</li>
+  </ul>
+</section>
+
+<!-- ═══ 2. Core Definitions ══════════════════════════════ -->
+<section id="s2">
+  <h2>2. Core Definitions</h2>
+<pre><code><span class="cm">// Option&lt;T&gt;: value may or may not exist</span>
+<span class="cm">// Some(T) | None</span>
+<span class="cm">// Used when "missing" is normal</span>
+
+<span class="cm">// Result&lt;T, E&gt;: success or error with diagnostic info</span>
+<span class="cm">// Ok(T) | Err(E)</span></code></pre>
+</section>
+
+<!-- ═══ 3. Conversions ═══════════════════════════════════ -->
+<section id="s3">
+  <h2>3. Conversions Between Option and Result</h2>
+
+  <h3>Option <span class="arrow">→</span> Result</h3>
+<pre><code><span class="lf">option</span><span class="pc">.</span><span class="fn">ok_or</span><span class="pc">(</span><span class="lf">err</span><span class="pc">)</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">ok_or_else</span><span class="pc">(||</span> <span class="lf">err</span><span class="pc">)</span>
+
+<span class="cm">// Example:</span>
+<span class="kw">let</span> <span class="lf">user</span> <span class="pc">=</span> <span class="lf">maybe_user</span><span class="pc">.</span><span class="fn">ok_or</span><span class="pc">(</span><span class="st">"user missing"</span><span class="pc">)?;</span></code></pre>
+
+  <h3>Result <span class="arrow">→</span> Option</h3>
+<pre><code><span class="lf">result</span><span class="pc">.</span><span class="fn">ok</span><span class="pc">()</span>      <span class="cm">// drop error, keep success</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">err</span><span class="pc">()</span>     <span class="cm">// drop success, keep error</span>
+
+<span class="cm">// Example:</span>
+<span class="kw">let</span> <span class="lf">maybe_int</span> <span class="pc">=</span> <span class="st">"123"</span><span class="pc">.</span><span class="fn">parse</span><span class="pc">::&lt;</span><span class="ty">i32</span><span class="pc">&gt;().</span><span class="fn">ok</span><span class="pc">();</span></code></pre>
+</section>
+
+<!-- ═══ 4. Transforming Values ═══════════════════════════ -->
+<section id="s4">
+  <h2>4. Transforming Values</h2>
+<pre><code><span class="lf">option</span><span class="pc">.</span><span class="fn">map</span><span class="pc">(|</span><span class="lf">v</span><span class="pc">|</span> <span class="fn">f</span><span class="pc">(</span><span class="lf">v</span><span class="pc">))</span>          <span class="cm">// transform Some(v)</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">map</span><span class="pc">(|</span><span class="lf">v</span><span class="pc">|</span> <span class="fn">f</span><span class="pc">(</span><span class="lf">v</span><span class="pc">))</span>          <span class="cm">// transform Ok(v)</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">map_err</span><span class="pc">(|</span><span class="lf">e</span><span class="pc">|</span> <span class="fn">g</span><span class="pc">(</span><span class="lf">e</span><span class="pc">))</span>      <span class="cm">// transform Err(e)</span></code></pre>
+
+  <h3>map_or / map_or_else</h3>
+<pre><code><span class="lf">option</span><span class="pc">.</span><span class="fn">map_or</span><span class="pc">(</span><span class="lf">default</span><span class="pc">,</span> <span class="pc">|</span><span class="lf">v</span><span class="pc">|</span> <span class="fn">f</span><span class="pc">(</span><span class="lf">v</span><span class="pc">))</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">map_or_else</span><span class="pc">(||</span> <span class="fn">default</span><span class="pc">(),</span> <span class="pc">|</span><span class="lf">v</span><span class="pc">|</span> <span class="fn">f</span><span class="pc">(</span><span class="lf">v</span><span class="pc">))</span></code></pre>
+</section>
+
+<!-- ═══ 5. Unwrapping With Defaults ══════════════════════ -->
+<section id="s5">
+  <h2>5. Unwrapping With Defaults (Safe)</h2>
+<pre><code><span class="lf">option</span><span class="pc">.</span><span class="fn">unwrap_or</span><span class="pc">(</span><span class="lf">default</span><span class="pc">)</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">unwrap_or_else</span><span class="pc">(||</span> <span class="lf">default</span><span class="pc">)</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">unwrap_or_default</span><span class="pc">()</span>       <span class="cm">// uses T: Default</span>
+
+<span class="lf">result</span><span class="pc">.</span><span class="fn">unwrap_or</span><span class="pc">(</span><span class="lf">default</span><span class="pc">)</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">unwrap_or_else</span><span class="pc">(|_|</span> <span class="lf">default</span><span class="pc">)</span></code></pre>
+</section>
+
+<!-- ═══ 6. Early Returns ════════════════════════════════= -->
+<section id="s6">
+  <h2>6. Early Returns With <code>?</code></h2>
+
+  <h3>Option example</h3>
+<pre><code><span class="kw">fn</span> <span class="fn">first_char</span><span class="pc">(</span><span class="lf">s</span><span class="pc">: &amp;</span><span class="ty">str</span><span class="pc">)</span> <span class="pc">-&gt;</span> <span class="ty">Option</span><span class="pc">&lt;</span><span class="ty">char</span><span class="pc">&gt;</span> <span class="pc">{</span>
+    <span class="kw">let</span> <span class="lf">c</span> <span class="pc">=</span> <span class="lf">s</span><span class="pc">.</span><span class="fn">chars</span><span class="pc">().</span><span class="fn">first</span><span class="pc">()?;</span>  <span class="cm">// returns None early</span>
+    <span class="ty">Some</span><span class="pc">(</span><span class="lf">c</span><span class="pc">)</span>
+<span class="pc">}</span></code></pre>
+
+  <h3>Result example</h3>
+<pre><code><span class="kw">fn</span> <span class="fn">load</span><span class="pc">()</span> <span class="pc">-&gt;</span> <span class="ty">Result</span><span class="pc">&lt;</span><span class="ty">String</span><span class="pc">,</span> <span class="ty">std</span><span class="pc">::</span><span class="ty">io</span><span class="pc">::</span><span class="ty">Error</span><span class="pc">&gt;</span> <span class="pc">{</span>
+    <span class="kw">let</span> <span class="lf">txt</span> <span class="pc">=</span> <span class="ty">std</span><span class="pc">::</span><span class="ty">fs</span><span class="pc">::</span><span class="fn">read_to_string</span><span class="pc">(</span><span class="st">"file.txt"</span><span class="pc">)?;</span>  <span class="cm">// returns Err early</span>
+    <span class="ty">Ok</span><span class="pc">(</span><span class="lf">txt</span><span class="pc">)</span>
+<span class="pc">}</span></code></pre>
+</section>
+
+<!-- ═══ 7. transpose() ═══════════════════════════════════ -->
+<section id="s7">
+  <h2>7. Combine Option&lt;Result&gt; Using transpose()</h2>
+<pre><code><span class="kw">let</span> <span class="lf">x</span><span class="pc">:</span> <span class="ty">Option</span><span class="pc">&lt;</span><span class="ty">Result</span><span class="pc">&lt;</span><span class="ty">i32</span><span class="pc">,</span> <span class="lf">_</span><span class="pc">&gt;&gt;</span> <span class="pc">=</span> <span class="ty">Some</span><span class="pc">(</span><span class="st">"5"</span><span class="pc">.</span><span class="fn">parse</span><span class="pc">());</span>
+<span class="kw">let</span> <span class="lf">y</span><span class="pc">:</span> <span class="ty">Result</span><span class="pc">&lt;</span><span class="ty">Option</span><span class="pc">&lt;</span><span class="ty">i32</span><span class="pc">&gt;,</span> <span class="lf">_</span><span class="pc">&gt;</span> <span class="pc">=</span> <span class="lf">x</span><span class="pc">.</span><span class="fn">transpose</span><span class="pc">()?;</span>  <span class="cm">// Option&lt;Result&gt; -&gt; Result&lt;Option&gt;</span></code></pre>
+</section>
+
+<!-- ═══ 8. Pattern Matching ══════════════════════════════ -->
+<section id="s8">
+  <h2>8. Pattern Matching</h2>
+
+  <h3>Option</h3>
+<pre><code><span class="kw">match</span> <span class="lf">val</span> <span class="pc">{</span>
+    <span class="ty">Some</span><span class="pc">(</span><span class="lf">v</span><span class="pc">)</span> <span class="pc">=&gt;</span> <span class="pc">{</span>
+        <span class="cm">// use v</span>
+    <span class="pc">}</span>
+    <span class="ty">None</span> <span class="pc">=&gt;</span> <span class="pc">{</span>
+        <span class="cm">// handle missing</span>
+    <span class="pc">}</span>
+<span class="pc">}</span></code></pre>
+
+  <h3>Result</h3>
+<pre><code><span class="kw">match</span> <span class="lf">res</span> <span class="pc">{</span>
+    <span class="ty">Ok</span><span class="pc">(</span><span class="lf">v</span><span class="pc">)</span> <span class="pc">=&gt;</span> <span class="pc">{</span>
+        <span class="cm">// use v</span>
+    <span class="pc">}</span>
+    <span class="ty">Err</span><span class="pc">(</span><span class="lf">e</span><span class="pc">)</span> <span class="pc">=&gt;</span> <span class="pc">{</span>
+        <span class="cm">// handle error</span>
+    <span class="pc">}</span>
+<span class="pc">}</span></code></pre>
+</section>
+
+<!-- ═══ 9. Option Helpers ════════════════════════════════ -->
+<section id="s9">
+  <h2>9. Useful Option Helpers</h2>
+<pre><code><span class="lf">option</span><span class="pc">.</span><span class="fn">is_some</span><span class="pc">();</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">is_none</span><span class="pc">();</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">as_ref</span><span class="pc">();</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">as_mut</span><span class="pc">();</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">take</span><span class="pc">();</span>                  <span class="cm">// take value, replace with None</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">filter</span><span class="pc">(|</span><span class="lf">v</span><span class="pc">|</span> <span class="fn">condition</span><span class="pc">(</span><span class="lf">v</span><span class="pc">))</span> <span class="cm">// keep only if predicate true</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">and</span><span class="pc">(</span><span class="lf">other_option</span><span class="pc">);</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">or</span><span class="pc">(</span><span class="lf">other_option</span><span class="pc">);</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">xor</span><span class="pc">(</span><span class="lf">other_option</span><span class="pc">);</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">flatten</span><span class="pc">();</span>               <span class="cm">// Option&lt;Option&lt;T&gt;&gt; -&gt; Option&lt;T&gt;</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">copied</span><span class="pc">();</span>                <span class="cm">// Option&lt;&amp;T&gt; -&gt; Option&lt;T&gt; if T: Copy</span>
+<span class="lf">option</span><span class="pc">.</span><span class="fn">cloned</span><span class="pc">();</span>                <span class="cm">// Option&lt;&amp;T&gt; -&gt; Option&lt;T&gt; clone</span></code></pre>
+
+  <h3>zip</h3>
+<pre><code><span class="ty">Some</span><span class="pc">(</span><span class="nu">1</span><span class="pc">).</span><span class="fn">zip</span><span class="pc">(</span><span class="ty">Some</span><span class="pc">(</span><span class="nu">2</span><span class="pc">));</span>   <span class="cm">// Some((1, 2))</span></code></pre>
+
+  <h3>iter</h3>
+<pre><code><span class="kw">for</span> <span class="lf">x</span> <span class="kw">in</span> <span class="lf">option</span><span class="pc">.</span><span class="fn">iter</span><span class="pc">()</span> <span class="pc">{</span> <span class="mc">println!</span><span class="pc">(</span><span class="st">"{x}"</span><span class="pc">);</span> <span class="pc">}</span></code></pre>
+
+  <h3>bool.then()</h3>
+<pre><code><span class="kw">let</span> <span class="lf">o</span> <span class="pc">=</span> <span class="lf">condition</span><span class="pc">.</span><span class="fn">then</span><span class="pc">(||</span> <span class="fn">compute_value</span><span class="pc">());</span></code></pre>
+</section>
+
+<!-- ═══ 10. Result Helpers ════════════════════════════════ -->
+<section id="s10">
+  <h2>10. Useful Result Helpers</h2>
+<pre><code><span class="lf">result</span><span class="pc">.</span><span class="fn">is_ok</span><span class="pc">();</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">is_err</span><span class="pc">();</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">as_ref</span><span class="pc">();</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">as_mut</span><span class="pc">();</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">or_else</span><span class="pc">(|</span><span class="lf">e</span><span class="pc">|</span> <span class="fn">f</span><span class="pc">(</span><span class="lf">e</span><span class="pc">));</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">and_then</span><span class="pc">(|</span><span class="lf">v</span><span class="pc">|</span> <span class="fn">g</span><span class="pc">(</span><span class="lf">v</span><span class="pc">));</span>      <span class="cm">// chain fallible operations</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">map</span><span class="pc">(|</span><span class="lf">v</span><span class="pc">|</span> <span class="fn">f</span><span class="pc">(</span><span class="lf">v</span><span class="pc">));</span>           <span class="cm">// transform Ok(v)</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">map_err</span><span class="pc">(|</span><span class="lf">e</span><span class="pc">|</span> <span class="fn">g</span><span class="pc">(</span><span class="lf">e</span><span class="pc">));</span>       <span class="cm">// transform Err(e)</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">inspect</span><span class="pc">(|</span><span class="lf">v</span><span class="pc">|</span> <span class="mc">println!</span><span class="pc">(</span><span class="st">"value = {v}"</span><span class="pc">));</span>
+<span class="lf">result</span><span class="pc">.</span><span class="fn">inspect_err</span><span class="pc">(|</span><span class="lf">e</span><span class="pc">|</span> <span class="mc">println!</span><span class="pc">(</span><span class="st">"error = {e}"</span><span class="pc">));</span></code></pre>
+
+  <h3>zip</h3>
+<pre><code><span class="kw">let</span> <span class="lf">a</span><span class="pc">:</span> <span class="ty">Result</span><span class="pc">&lt;</span><span class="ty">i32</span><span class="pc">,</span> <span class="lf">_</span><span class="pc">&gt;</span> <span class="pc">=</span> <span class="ty">Ok</span><span class="pc">(</span><span class="nu">3</span><span class="pc">);</span>
+<span class="kw">let</span> <span class="lf">b</span><span class="pc">:</span> <span class="ty">Result</span><span class="pc">&lt;</span><span class="ty">i32</span><span class="pc">,</span> <span class="lf">_</span><span class="pc">&gt;</span> <span class="pc">=</span> <span class="ty">Ok</span><span class="pc">(</span><span class="nu">4</span><span class="pc">);</span>
+<span class="kw">let</span> <span class="lf">both</span> <span class="pc">=</span> <span class="lf">a</span><span class="pc">.</span><span class="fn">zip</span><span class="pc">(</span><span class="lf">b</span><span class="pc">)?;</span>   <span class="cm">// (3, 4)</span></code></pre>
+</section>
+
+<!-- ═══ 11. Real-World Patterns ══════════════════════════ -->
+<section id="s11">
+  <h2>11. Common Real-World Patterns</h2>
+
+  <h3>Optional lookup <span class="arrow">→</span> error</h3>
+<pre><code><span class="kw">let</span> <span class="lf">last</span> <span class="pc">=</span> <span class="lf">v</span><span class="pc">.</span><span class="fn">last</span><span class="pc">().</span><span class="fn">copied</span><span class="pc">().</span><span class="fn">ok_or</span><span class="pc">(</span><span class="st">"empty slice"</span><span class="pc">)?;</span></code></pre>
+
+  <h3>Try parse <span class="arrow">→</span> Option</h3>
+<pre><code><span class="kw">let</span> <span class="lf">n</span> <span class="pc">=</span> <span class="st">"42"</span><span class="pc">.</span><span class="fn">parse</span><span class="pc">::&lt;</span><span class="ty">i32</span><span class="pc">&gt;().</span><span class="fn">ok</span><span class="pc">();</span></code></pre>
+
+  <h3>Fallible chaining</h3>
+<pre><code><span class="kw">fn</span> <span class="fn">run</span><span class="pc">()</span> <span class="pc">-&gt;</span> <span class="ty">Result</span><span class="pc">&lt;()&gt;</span> <span class="pc">{</span>
+    <span class="kw">let</span> <span class="lf">txt</span> <span class="pc">=</span> <span class="ty">std</span><span class="pc">::</span><span class="ty">fs</span><span class="pc">::</span><span class="fn">read_to_string</span><span class="pc">(</span><span class="st">"config.toml"</span><span class="pc">)?;</span>
+    <span class="kw">let</span> <span class="lf">port</span><span class="pc">:</span> <span class="ty">u16</span> <span class="pc">=</span> <span class="lf">txt</span><span class="pc">.</span><span class="fn">trim</span><span class="pc">().</span><span class="fn">parse</span><span class="pc">()?;</span>
+    <span class="ty">Ok</span><span class="pc">(())</span>
+<span class="pc">}</span></code></pre>
+
+  <h3>Add context to errors (anyhow)</h3>
+<pre><code><span class="kw">use</span> <span class="ty">anyhow</span><span class="pc">::{</span><span class="ty">Result</span><span class="pc">,</span> <span class="ty">Context</span><span class="pc">};</span>
+
+<span class="kw">fn</span> <span class="fn">load</span><span class="pc">(</span><span class="lf">path</span><span class="pc">: &amp;</span><span class="ty">str</span><span class="pc">)</span> <span class="pc">-&gt;</span> <span class="ty">Result</span><span class="pc">&lt;</span><span class="ty">String</span><span class="pc">&gt;</span> <span class="pc">{</span>
+    <span class="ty">std</span><span class="pc">::</span><span class="ty">fs</span><span class="pc">::</span><span class="fn">read_to_string</span><span class="pc">(</span><span class="lf">path</span><span class="pc">)</span>
+        <span class="pc">.</span><span class="fn">with_context</span><span class="pc">(||</span> <span class="mc">format!</span><span class="pc">(</span><span class="st">"failed reading config: {path}"</span><span class="pc">))</span>
+<span class="pc">}</span></code></pre>
+
+  <h3>Convert Option&lt;T&gt; ↔ Result&lt;T, ()&gt;</h3>
+<pre><code><span class="kw">let</span> <span class="lf">r</span><span class="pc">:</span> <span class="ty">Result</span><span class="pc">&lt;</span><span class="ty">i32</span><span class="pc">,</span> <span class="pc">()</span><span class="pc">&gt;</span> <span class="pc">=</span> <span class="lf">option</span><span class="pc">.</span><span class="fn">ok_or</span><span class="pc">(());</span>
+<span class="kw">let</span> <span class="lf">o</span><span class="pc">:</span> <span class="ty">Option</span><span class="pc">&lt;</span><span class="ty">i32</span><span class="pc">&gt;</span> <span class="pc">=</span> <span class="lf">result</span><span class="pc">.</span><span class="fn">ok</span><span class="pc">();</span></code></pre>
+</section>
+
+<!-- ═══ 12. When to Use Which ════════════════════════════ -->
+<section id="s12">
+  <h2>12. When to Use Which</h2>
+<pre><code><span class="cm">// Use Option&lt;T&gt; when:</span>
+<span class="cm">//   - Missing is normal</span>
+<span class="cm">//   - No error info needed</span>
+<span class="cm">//   - Natural optionality (searching, lookup, optional fields)</span>
+
+<span class="cm">// Use Result&lt;T, E&gt; when:</span>
+<span class="cm">//   - Operation should usually succeed</span>
+<span class="cm">//   - Diagnostics matter</span>
+<span class="cm">//   - Failure is exceptional or worth reporting</span></code></pre>
+</section>
+
+<!-- ═══ 13. Avoid Common Mistakes ════════════════════════ -->
+<section id="s13">
+  <h2>13. Avoid Common Mistakes</h2>
+<pre><code><span class="cm">// Don't hide real errors by returning Option.</span>
+<span class="cm">// Don't wrap everything in Result unnecessarily.</span>
+<span class="cm">// Don't call unwrap() except in guaranteed-safe situations (tests, invariants).</span></code></pre>
+</section>
+
+<footer>Rust Cheat Sheet · Dark Edition</footer>
+
+</body>
+</html>

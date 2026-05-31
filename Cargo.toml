@@ -8,17 +8,13 @@ edition = "2021"
 [dependencies]
 
 [[bin]]
+name = "misc"
+path = "src/00-misc/main.rs"
+
+[[bin]]
 name = "primitives"
 path = "src/01-primitives/main.rs"
 
 [[bin]]
 name = "structs"
 path = "src/02-structs/main.rs"
-
-[[bin]]
-name = "containers"
-path = "src/0?-containers/main.rs"
-
-[[bin]]
-name = "controlflow"
-path = "src/0?-controlflow/main.rs"

@@ -99,7 +99,7 @@ fn main() {
 
 
     // Easy way to check the type of a variable; set it to a wrong type
-    let array: [i32; 5] = [1, 2, 3, 4, 5];
+    let _array: [i32; 5] = [1, 2, 3, 4, 5];
     // let slice: () = &array;
 
 }
